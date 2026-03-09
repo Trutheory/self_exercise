@@ -2,7 +2,151 @@
 #include<string.h>
 #include"team.h"
 
+//初始化球队，设置默认值
+void init_teams(struct Team t[]){
+	int i;
+	for(i = 0; i < N; i++){
+		sprintf(t[i].name, "球队%d", i + 1);
+		t[i].score = t[i].win = t[i].draw = t[i].lose = 0;
+		t[i].goal = t[i].lose_goal = t[i].more_goal = 0;
+	}
+} 
 
+//检查队名是否已存在（遍历
+int check_name_exists(struct Team t[], char* name, int current){
+	int i;
+	for(i = 0; i < current; i++){
+		if(strcmp(t[i].name, name) == 0){
+			return 1;
+		}
+	}
+	return 0;
+} 
+
+//用户输入队名（带检测
+int input_team_names(struct Team t[]){
+	char name[20];
+	int i;
+	
+	printf("输入10支球队名称：\n");
+	
+	for(i = 0; i < N; i++){
+		while(1){
+			printf("第%d支：", i + 1);
+			
+			//读取整行输入
+			if(fgets(name, sizeof(name), stdin) == NULL){
+				printf("输入错误，请重新输入！\n");
+				continue;
+			} 
+			
+			//去掉换行符 
+			name[strcspn(name,"\n")] = '\0';
+			
+			//检查是否为空 
+			if(strlen(name) == 0){
+				printf("队名不能为空，请重新输入！\n");
+				continue;
+			} 
+			
+			//检查是否与前面队名重复
+			if(check_name_exists(t, name, i)){
+				printf("队名重复，请输入不同的队名！\n");
+				continue;
+			}
+			
+			//名字有效，保存到数组
+			strcpy(t[i].name, name);
+			break; 
+		}
+	}
+	return 1;
+} 
+
+//显示所有球队的编号
+void show_team_list(struct Team t[]){
+	int i;
+	printf("\n球队编号\n");
+	for(i = 0; i < N; i++){
+		printf("%-2d -- %-10s\n", i + 1, t[i].name);
+	} 
+} 
+
+//输入一场比赛带校验，返回1为成功，0失败
+int input_one_match(struct Team t[], struct Match m[], int* match_cnt, int round, int match_num){
+	int a, b, x, y; //队伍编号与进球数
+	char input[50];
+	
+	while(1){
+		printf("第%d场：", match_num);
+		printf("输入 球队A编号 球队B编号 比分x:y:");
+		
+		//读取整行输入
+		if(fgets(input,sizeof(input),stdin) == NULL){
+			printf("输入错误！请重新输入\n");
+			continue;
+		} 
+		
+		//去掉换行符
+		input[strcspn(input, "\n")] = '\0';
+		
+		//检查格式
+		int parsed = sscanf(input, "%d%d%d:%d", &a, &b, &x, &y);
+		if(parsed != 4){
+			printf("格式错误！正确格式：球队A编号 球队B编号 比分x:比分y\n");
+			continue; 
+		} 
+		
+		//检查球队编号是否有效（1-10
+		if(a < 1 || a > N || b < 1 || b > N){
+			printf("球队编号无效！范围：1-%d\n", N);
+			continue;
+		} 
+		
+		//检查两支球队是否相同
+		if(a == b){
+			printf("错误：同一支球队不能比赛！\n");
+			continue;
+		} 
+		
+		//转换数组下标
+		a--;b--;
+		
+		//更新球队数据
+		team_data(t, a, b, x, y);
+		
+		//保存比赛记录
+		m[*match_cnt].round = round;
+		strcpy(m[*match_cnt].a_name, t[a].name);
+		strcpy(m[*match_cnt].b_name, t[b].name);
+		m[*match_cnt].a_goal = x;
+		m[*match_cnt].b_goal = y;
+		(*match_cnt)++;
+		
+		//显示比赛结果
+		printf("  -> %s %d:%d %s\n",t[a].name, x, y, t[b].name);
+		
+		return 1; 
+	} 
+} 
+
+//完成一轮比赛
+void play_one_round(struct Team t[], struct Match m[], int* match_cnt, int round){
+	int i;
+	
+	printf("\n==========第%d轮比赛==========\n",round);
+	
+	//输入5场比赛
+	for(i = 0; i < 5; i++){
+		input_one_match(t, m, match_cnt, round, i+1);
+	} 
+	
+	//本轮比完后排序并显示积分榜
+	sort_team(t);
+	show_rank(t); 
+} 
+
+//以下为原有函数 
 //计算单场比赛后球队数据
 void team_data(struct Team t[], int a, int b, int x, int y){
 	a--;
@@ -42,7 +186,7 @@ void sort_team(struct Team t[]) {
 //展示积分榜
 void show_rank(struct Team t[]) {
     int i;
-    printf("\n========== 积分榜 =========\n");
+    printf("\n============ 积分榜 ============\n");
     printf("%-4s %-10s %6s %4s %4s %4s %6s %6s %8s\n",
            "排名", "队名", "积分", "胜", "平", "负", "进球", "失球", "净胜球");
     printf("----------------------------------------------------------------\n");
