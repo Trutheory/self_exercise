@@ -27,5 +27,9 @@ void team_data(struct Team t[], int a, int b, int x, int y); //计算球队数据
 void sort_team(struct Team t[]); //排序 
 void show_rank(struct Team t[]); //展示积分榜
 void save_matches(struct Match m[], int cnt); //存储比分
-
+void init_teams(struct Team t[]); //初始化球队
+void check_name_exists(struct Team t[],char* name, int current); //检查队名是否重复
+int input_team_list(struct Team t[],struct Match m[], int* match_cnt, int round, int match_num); //输入一场比赛（有校验输入
+void play_one_round(struct Team t[], struct Match m[], int* match_cnt,int round); //完成一轮比赛 
+ 
 #endif 
