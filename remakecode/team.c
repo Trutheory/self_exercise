@@ -158,6 +158,7 @@ void play_one_round(struct Team t[], struct Match m[], int* match_cnt, int round
 void team_data(struct Team t[], int a, int b, int x, int y){
 	a--;
 	b--; //均转为下标
+	
 	//更新进球/失球/净胜球
 	t[a].goal += x; 
 	t[a].lose_goal += y;
@@ -165,7 +166,8 @@ void team_data(struct Team t[], int a, int b, int x, int y){
 	t[b].lose_goal += x;
     t[a].more_goal = t[a].goal - t[a].lose_goal;
     t[b].more_goal = t[b].goal - t[b].lose_goal;
-    //更新积分/胜负平
+    
+	//更新积分/胜负平
 	if (x > y) { 
 		t[a].score +=3; t[a].win++; t[b].lose++; 
 	}
@@ -176,6 +178,7 @@ void team_data(struct Team t[], int a, int b, int x, int y){
 		t[a].score++; t[b].score++; t[a].draw++; t[b].draw++; 
 	}
 }
+
 //排序（积分-净胜球-进球）
 void sort_team(struct Team t[]) {
     int i, j;
@@ -190,6 +193,7 @@ void sort_team(struct Team t[]) {
         }
     }
 }
+
 //展示积分榜
 void show_rank(struct Team t[]) {
     int i;
@@ -203,6 +207,7 @@ void show_rank(struct Team t[]) {
                t[i].lose, t[i].goal, t[i].lose_goal, t[i].more_goal);
     }
 }
+
 //存储每轮比分到文件
 void save_matches(struct Match m[], int cnt){
 	int i;
@@ -220,6 +225,7 @@ void save_matches(struct Match m[], int cnt){
     fclose(fp);
     printf("比分已保存到 matches.txt\n");
 }
+
 //检查两支球队是否已经比赛过
 int is_match_exists(struct Match m[], int count, char* a_name, char* b_name) {
     int i;
