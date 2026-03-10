@@ -109,6 +109,13 @@ int input_one_match(struct Team t[], struct Match m[], int* match_cnt, int round
 			continue;
 		} 
 		
+		//检查两支球队是否已经比赛过
+		if (is_match_exists(m, *match_cnt, t[a].name, t[b].name)) {
+    		printf("这两支球队已经比赛过了！\n");
+    		continue;
+        }
+
+		
 		//转换数组下标
 		a--;b--;
 		
@@ -186,12 +193,14 @@ void sort_team(struct Team t[]) {
 //展示积分榜
 void show_rank(struct Team t[]) {
     int i;
-    printf("\n============ 积分榜 ============\n");
-    printf("%-4s %-10s %6s %4s %4s %4s %6s %6s %8s\n",
+    printf("\n========== 积分榜 ==========\n");
+    printf("%-4s %-10s %4s %4s %4s %4s %6s %6s %6s\n",
            "排名", "队名", "积分", "胜", "平", "负", "进球", "失球", "净胜球");
-    printf("----------------------------------------------------------------\n");
+    printf("------------------------------------------------------\n");
     for (i = 0; i < N; i++) {
-        printf("%-4d %-10s %6d %4d %4d %4d %6d %6d %8d\n",i + 1, t[i].name, t[i].score, t[i].win, t[i].draw,t[i].lose, t[i].goal, t[i].lose_goal, t[i].more_goal);
+        printf("%-4d %-10s %4d %4d %4d %4d %6d %6d %6d\n",
+               i + 1, t[i].name, t[i].score, t[i].win, t[i].draw, 
+               t[i].lose, t[i].goal, t[i].lose_goal, t[i].more_goal);
     }
 }
 //存储每轮比分到文件
@@ -202,12 +211,24 @@ void save_matches(struct Match m[], int cnt){
 		printf("保存失败！\n");
 		return;
 	}
-	fprintf(fp, "%-6s%-8s%-8s%6s%6s\n","轮次","a队","b队","a进球","b进球");
+	fprintf(fp, "%-4s %-12s %-12s %6s %6s\n", "轮次", "A队", "B队", "A进球", "B进球");
+	printf("---------------------------------------------------------------\n");
     for (i = 0; i < cnt; i++) {
-        fprintf(fp, "%-2d  %-8s %-8s   %3d     %3d\n",
+        fprintf(fp, "%-4d %-12s %-12s %6d %6d\n",
                 m[i].round, m[i].a_name, m[i].b_name, m[i].a_goal, m[i].b_goal);
     }
     fclose(fp);
     printf("比分已保存到 matches.txt\n");
-} 
+}
+//检查两支球队是否已经比赛过
+int is_match_exists(struct Match m[], int count, char* a_name, char* b_name) {
+    int i;
+    for (i = 0; i < count; i++) {
+        if ((strcmp(m[i].a_name, a_name) == 0 && strcmp(m[i].b_name, b_name) == 0) ||
+            (strcmp(m[i].a_name, b_name) == 0 && strcmp(m[i].b_name, a_name) == 0)) {
+            return 1;
+        }
+    }
+    return 0;
+}
 

@@ -27,7 +27,7 @@ int main() {
     }
 
     // 5. 最终展示+存储比分
-    printf("\n==== 最终积分榜 ====\n");
+    printf("\n============ 最终积分榜 ============\n");
     show_rank(team);
     show_rank(team);
     save_matches(matches, match_cnt);

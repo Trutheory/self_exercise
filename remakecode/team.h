@@ -33,5 +33,7 @@ int input_team_names(struct Team t[]);//输入队名（带检测
 void show_team_list(struct Team t[]);//显示球队编号列表 
 int input_one_match(struct Team t[],struct Match m[], int* match_cnt, int round, int match_num); //输入一场比赛（有校验输入
 void play_one_round(struct Team t[], struct Match m[], int* match_cnt,int round); //完成一轮比赛 
- 
+int is_match_exists(struct Match m[], int count, char* a_name, char* b_name); //检查比赛是否重复
+
+
 #endif 
