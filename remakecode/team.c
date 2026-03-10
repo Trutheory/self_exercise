@@ -15,13 +15,13 @@ void init_teams(struct Team t[]){
 //检查队名是否已存在（遍历
 int check_name_exists(struct Team t[], char* name, int current){
 	int i;
-	for(i = 0; i < current; i++){
+	for(i=0; i<current; i++){
 		if(strcmp(t[i].name, name) == 0){
-			return 1;
+			return 1;  //重复返回1
 		}
 	}
-	return 0;
-} 
+	return 0;  //不重复返回0
+}
 
 //用户输入队名（带检测
 int input_team_names(struct Team t[]){
