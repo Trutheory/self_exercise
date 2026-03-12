@@ -375,7 +375,9 @@ void save_matches(struct Match m[], int cnt);
 
 显示系统名称和比赛规则，用户可以清晰了解系统的使用方法，界面如图3.1所示：
 
-（此处插入图3.1）
+![img](file:///C:\Users\Natru\Documents\Tencent Files\2295970345\nt_qq\nt_data\Pic\2026-03\Ori\a3aab4ec743ecd0b1cd3ac4ced593515.png)
+
+​																					图3.1
 
 **【比赛规则】**
   队名：不能重复，不能为空
@@ -390,16 +392,9 @@ void save_matches(struct Match m[], int cnt);
 
 提示用户输入10支球队名称，每输入一个队名都会进行重复检测，界面如图3.2所示：
 
-（此处插入图3.2）
+![img](file:///C:\Users\Natru\Documents\Tencent Files\2295970345\nt_qq\nt_data\Pic\2026-03\Ori\639ce6c7c2e2313dfe9a05cb1da2e55f.png)
 
-```
-请输入10支球队的名称：
-第1支：巴西
-第2支：阿根廷
-...
-```
-
-**图3.2 队名输入界面**
+​																				图3.2
 
 **3. 球队编号显示界面**
 
@@ -407,15 +402,9 @@ void save_matches(struct Match m[], int cnt);
 
 （此处插入图3.3）
 
-```
-球队编号：
-1 -- 巴西
-2 -- 阿根廷
-3 -- 法国
-...
-```
+![image-20260311180045063](C:\Users\Natru\AppData\Roaming\Typora\typora-user-images\image-20260311180045063.png)
 
-**图3.3 球队编号显示界面**
+​																				图3.3
 
 **4. 比赛录入界面**
 
@@ -423,14 +412,9 @@ void save_matches(struct Match m[], int cnt);
 
 （此处插入图3.4）
 
-```
-==== 第1轮比赛 ====
-第1场：输入 球队A 球队B 比分x:y：1 2 3:1
-  -> 巴西 3:1 阿根廷
-第2场：输入 球队A 球队B 比分x:y：
-```
+![image-20260311180147194](C:\Users\Natru\AppData\Roaming\Typora\typora-user-images\image-20260311180147194.png)
 
-**图3.4 比赛录入界面**
+​																				图3.4
 
 **5. 积分榜显示界面**
 

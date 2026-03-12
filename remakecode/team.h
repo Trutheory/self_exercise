@@ -6,12 +6,13 @@
 
 //球队结构体 
 struct Team{
-	char name[20]; //球队名称 
+	char name[20]; //球队名称
 	int score; //积分
 	int win,draw,lose;
 	int goal,lose_goal;
 	int more_goal;  //净胜球 
 }; 
+
 
 //每轮比分存储结构
 struct Match{
@@ -34,6 +35,6 @@ void show_team_list(struct Team t[]);//显示球队编号列表
 int input_one_match(struct Team t[],struct Match m[], int* match_cnt, int round, int match_num); //输入一场比赛（有校验输入
 void play_one_round(struct Team t[], struct Match m[], int* match_cnt,int round); //完成一轮比赛 
 int is_match_exists(struct Match m[], int count, char* a_name, char* b_name); //检查比赛是否重复
-
+int is_team_in_round(struct Match m[], int count, char* team_name, int round); //检查队伍是否在本轮已比赛
 
 #endif 

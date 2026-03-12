@@ -6,7 +6,7 @@
 void init_teams(struct Team t[]){
 	int i;
 	for(i = 0; i < N; i++){
-		sprintf(t[i].name, "球队%d", i + 1);
+		sprintf(t[i].name, "球队%d", i + 1);		
 		t[i].score = t[i].win = t[i].draw = t[i].lose = 0;
 		t[i].goal = t[i].lose_goal = t[i].more_goal = 0;
 	}
@@ -15,7 +15,7 @@ void init_teams(struct Team t[]){
 //检查队名是否已存在（遍历
 int check_name_exists(struct Team t[], char* name, int current){
 	int i;
-	for(i=0; i<current; i++){
+	for(i = 0; i < current; i++){
 		if(strcmp(t[i].name, name) == 0){
 			return 1;  //重复返回1
 		}
@@ -109,15 +109,27 @@ int input_one_match(struct Team t[], struct Match m[], int* match_cnt, int round
 			continue;
 		} 
 		
+		//转下标
+		a--;
+		b--;
+		 
+		//检查A队是否在本轮已比赛
+		if(is_team_in_round(m, *match_cnt, t[a].name, round)){
+			printf("%s在本轮已经比赛过了！\n", t[a].name);
+			continue;
+		}
+		
+		//检查B队是否在本轮已比赛
+		if(is_team_in_round(m, *match_cnt, t[b].name, round)){
+			printf("%s在本轮已经比赛过了！\n", t[b].name);
+			continue;
+		}
+		
 		//检查两支球队是否已经比赛过
 		if (is_match_exists(m, *match_cnt, t[a].name, t[b].name)) {
     		printf("这两支球队已经比赛过了！\n");
     		continue;
         }
-
-		
-		//转换数组下标
-		a--;b--;
 		
 		//更新球队数据
 		team_data(t, a, b, x, y);
@@ -138,7 +150,7 @@ int input_one_match(struct Team t[], struct Match m[], int* match_cnt, int round
 } 
 
 //完成一轮比赛
-void play_one_round(struct Team t[], struct Match m[], int* match_cnt, int round){
+void play_one_round(struct Team t[],struct Match m[], int* match_cnt, int round){
 	int i;
 	
 	printf("\n==========第%d轮比赛==========\n",round);
@@ -149,16 +161,12 @@ void play_one_round(struct Team t[], struct Match m[], int* match_cnt, int round
 	} 
 	
 	//本轮比完后排序并显示积分榜
-	sort_team(t);
 	show_rank(t); 
 } 
 
 //以下为原有函数 
 //计算单场比赛后球队数据
 void team_data(struct Team t[], int a, int b, int x, int y){
-	a--;
-	b--; //均转为下标
-	
 	//更新进球/失球/净胜球
 	t[a].goal += x; 
 	t[a].lose_goal += y;
@@ -179,32 +187,48 @@ void team_data(struct Team t[], int a, int b, int x, int y){
 	}
 }
 
-//排序（积分-净胜球-进球）
-void sort_team(struct Team t[]) {
+void show_rank(struct Team t[]) {
     int i, j;
-    struct Team temp;
-    for (i = 0; i < N-1; i++) {
-        for (j = i+1; j < N; j++) {
-            if (t[j].score > t[i].score || 
-                (t[j].score == t[i].score && t[j].more_goal > t[i].more_goal) ||
-                (t[j].score == t[i].score && t[j].more_goal == t[i].more_goal && t[j].goal > t[i].goal)) {
-                temp = t[i]; t[i] = t[j]; t[j] = temp;
+    //创建名次数组
+    int rank_idx[N];
+    for (i = 0; i < N; i++) {
+        rank_idx[i] = i;
+    }
+
+    // 第二步：冒泡排rank_idx数组
+    // 分从高到低，积分相同看净胜球
+    for (i = 0; i < N - 1; i++) {
+        for (j = 0; j < N - 1; j++) {
+            // 比较rank_idx里两个下标对应的球队积分
+            int idx1 = rank_idx[j];   // 第j名对应的原始下标
+            int idx2 = rank_idx[j+1]; // 第j+1名对应的原始下标
+            // 积分低的往后排，积分相同则净胜球低的往后排
+            if (t[idx1].score < t[idx2].score || 
+                (t[idx1].score == t[idx2].score && t[idx1].more_goal < t[idx2].more_goal)) {
+                // 只交换名次数组里的下标
+                int temp = rank_idx[j];
+                rank_idx[j] = rank_idx[j+1];
+                rank_idx[j+1] = temp;
             }
         }
     }
-}
 
-//展示积分榜
-void show_rank(struct Team t[]) {
-    int i;
-    printf("\n========== 积分榜 ==========\n");
-    printf("%-4s %-10s %4s %4s %4s %4s %6s %6s %6s\n",
-           "排名", "队名", "积分", "胜", "平", "负", "进球", "失球", "净胜球");
-    printf("------------------------------------------------------\n");
-    for (i = 0; i < N; i++) {
-        printf("%-4d %-10s %4d %4d %4d %4d %6d %6d %6d\n",
-               i + 1, t[i].name, t[i].score, t[i].win, t[i].draw, 
-               t[i].lose, t[i].goal, t[i].lose_goal, t[i].more_goal);
+    //显示排名，按名次数组找原始球队
+    printf("%-4s %-6s %-10s %4s %4s %4s %4s %6s %6s %6s\n",
+           "排名", "队伍编号", "队名", "积分", "胜", "平", "负", "进球", "失球", "净胜球");
+    for (i = 0; i < 10; i++) {
+        int idx = rank_idx[i]; // 找到当前排名对应的原始下标
+        printf("%-4d %-6d %-10s %4d %4d %4d %4d %6d %6d %6d\n",
+               i+1,          // 排名
+               idx + 1,      // 球队原始编号
+               t[idx].name,  // 队名
+               t[idx].score, // 积分
+               t[idx].win,   // 胜
+               t[idx].draw,  // 平
+               t[idx].lose,  // 负
+               t[idx].goal,  // 进球
+               t[idx].lose_goal, // 失球
+               t[idx].more_goal); // 净胜球
     }
 }
 
@@ -238,3 +262,15 @@ int is_match_exists(struct Match m[], int count, char* a_name, char* b_name) {
     return 0;
 }
 
+//检查某队是否在本轮比赛过 
+int is_team_in_round(struct Match m[], int count, char* team_name, int round) {
+    int i;
+    for (i = 0; i < count; i++) {
+        if (m[i].round == round) {
+            if (strcmp(m[i].a_name, team_name) == 0 || strcmp(m[i].b_name, team_name) == 0) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
