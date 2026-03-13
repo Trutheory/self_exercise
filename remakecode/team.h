@@ -25,7 +25,6 @@ struct Match{
 
 //声明核心函数
 void team_data(struct Team t[], int a, int b, int x, int y); //计算球队数据
-void sort_team(struct Team t[]); //排序 
 void show_rank(struct Team t[]); //展示积分榜
 void save_matches(struct Match m[], int cnt); //存储比分
 void init_teams(struct Team t[]); //初始化球队
