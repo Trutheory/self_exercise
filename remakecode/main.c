@@ -24,10 +24,6 @@ int main() {
 	
     // 3. 显示球队编号
     show_team_list(team);
-    
-    //新增清空输入缓冲避免回车影响输入
-	int c;
-	while((c = getchar()) != '\n' && c != EOF); 
 
     // 4. 录入9轮比赛（每轮5场）
     for (round = 1; round <= 9; round++) {
