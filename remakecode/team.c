@@ -202,9 +202,9 @@ void show_rank(struct Team t[]) {
             // 比较rank_idx里两个下标对应的球队积分
             int idx1 = rank_idx[j];   // 第j名对应的原始下标
             int idx2 = rank_idx[j+1]; // 第j+1名对应的原始下标
-            // 积分低的往后排，积分相同则净胜球低的往后排
+            // 积分低的往后排，积分相同则净胜球低的往后排，然后是进球总数 
             if (t[idx1].score < t[idx2].score || 
-                (t[idx1].score == t[idx2].score && t[idx1].more_goal < t[idx2].more_goal)) {
+                (t[idx1].score == t[idx2].score && t[idx1].more_goal < t[idx2].more_goal)||(t[idx1].score == t[idx2].score && t[idx1].more_goal == t[idx2].more_goal && t[idx1].goal < t[idx2].goal)) {
                 // 只交换名次数组里的下标
                 int temp = rank_idx[j];
                 rank_idx[j] = rank_idx[j+1];
